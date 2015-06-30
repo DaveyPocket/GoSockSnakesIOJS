@@ -14,16 +14,28 @@
     </style>
   </head>
   <body>
-    <script src="/socket.io.js"></script>
-    <script src="/jquery-1.11.1.js"></script>
-    <script src="/game.js"></script>
+    <!--script src="/socket.io.js"></script>
+    <script src="/jquery-1.11.1.js"></script-->
+    <script src="game.js"></script>
     <script>
-      var socket = io();
+      //var socket = io();
     </script>
     <canvas id="canvas" width="600" height="600">Your browser does not support Canvas! Please download Google Chrome</canvas>
-    <script>  var game = game || new Game();
-              setInterval(function() {
-              game.tick();
-              }, 500); </script>
+    <script>  
+    var currentStatus = {
+      "snakes" : {
+        "green": {
+          points: [new Point(30,30),new Point(31,30),new Point(32,30),new Point(33,30)],
+          direction: "LEFT"
+        },
+        "blue": {
+          points: [new Point(30,31),new Point(31,31),new Point(32,31),new Point(33,31)],
+          direction: "RIGHT"
+        }
+      },
+        "food": [new Point(15,15)]
+    }
+    var game = game || new Game(currentStatus);
+              game.tick(); </script>
   </body>
 </html>
