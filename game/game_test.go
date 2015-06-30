@@ -13,14 +13,14 @@ func TestInitGame(t *testing.T) {
 // Remaining functions should not run if TestInitGame fails
 func TestAddSnake(t *testing.T) {
 	g := InitGame()
-	g.AddSnake(1, 2, 5, 0, ownerT(0))
+	g.AddSnake(1, 2, 5, "RIGHT")
 	fmt.Println(g.Snake[0].Body)
 }
 
 func TestGetJSON(t *testing.T) {
 	g := InitGame()
-	g.AddSnake(1, 2, 5, 0, ownerT(0))
-	g.AddSnake(2, 3, 1, 0, ownerT(0))
+	g.AddSnake(1, 2, 5, "RIGHT")
+	g.AddSnake(2, 3, 1, "RIGHT")
 	q := g.GetJSON()
 	ung := InitGame()
 	err := json.Unmarshal(q, &ung)
@@ -29,3 +29,5 @@ func TestGetJSON(t *testing.T) {
 	}
 	fmt.Println("\n", *ung)
 }
+
+
