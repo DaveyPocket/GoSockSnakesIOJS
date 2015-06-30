@@ -132,7 +132,7 @@ Game.prototype.tick = function() {
 
         //update current tick
         this.current_tick += 1;
-        this.current_tick = this.current_tick % 20;
+        this.current_tick = this.current_tick % 60;
     }
 };
 

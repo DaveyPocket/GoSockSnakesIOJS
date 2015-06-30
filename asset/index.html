@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Multiplayer Snake</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -14,22 +14,16 @@
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
     <script src="/socket.io.js"></script>
     <script src="/jquery-1.11.1.js"></script>
+    <script src="/game.js"></script>
     <script>
       var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
     </script>
+    <canvas id="canvas" width="600" height="600">Your browser does not support Canvas! Please download Google Chrome</canvas>
+    <script>  var game = game || new Game();
+              setInterval(function() {
+              game.tick();
+              }, 500); </script>
   </body>
 </html>
