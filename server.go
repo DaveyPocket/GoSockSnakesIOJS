@@ -11,8 +11,8 @@ import (
 
 func main() {
 	g := logic.InitGame()
-	g.AddSnake(1, 1, 5, "LEFT")
-	g.AddSnake(2, 3, 8, "RIGHT")
+	g.AddSnake(20, 20, 5, "LEFT")
+//	g.AddSnake(2, 3, 8, "RIGHT")
     server, err := socketio.NewServer(nil)
     if err != nil {
         log.Fatal(err)
@@ -21,17 +21,17 @@ func main() {
 	
         log.Println("on connection")
         so.Join("main")
-        so.On("join game", func() {
-            log.Println("Received join game")
+        so.On("join game", func(msg string) {
+            log.Println("Received join game", msg)
             so.Emit("init setup", g)
 			log.Println("Finished broadcast")
         })
 		so.On("yes", func(){
 			log.Println("Hi")
 		})
-		so.On("ready", func() {
+		so.On("ready", func(msg string) {
 
-			log.Println("Received ready")
+			log.Println("Received ready", msg)
 
 			go func() {
 				for {
