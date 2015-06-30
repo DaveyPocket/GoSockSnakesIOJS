@@ -23,21 +23,24 @@ func main() {
         so.Join("main")
         so.On("join game", func() {
             log.Println("Received join game")
-            		
+            so.Emit("init setup", g)
+			log.Println("Finished broadcast")
         })
-		log.Println("After join game...")
-		so.BroadcastTo("main", "init setup", g)
-
-		so.On("ready", func() {
-			log.Println("Received ready")
-			go func() {
-			for {
-				log.Println("tick")
-				so.BroadcastTo("main", "tick")
-				time.Sleep(500 * time.Millisecond)
-			}}()
+		so.On("yes", func(){
+			log.Println("Hi")
 		})
-        so.On("disconnection", func() {
+		so.On("ready", func() {
+
+			log.Println("Received ready")
+
+			go func() {
+				for {
+					log.Println("tick")
+					so.BroadcastTo("main", "tick")
+					time.Sleep(500 * time.Millisecond)
+				}}()
+		})
+	so.On("disconnection", func() {
             log.Println("on disconnect")
         })
     })

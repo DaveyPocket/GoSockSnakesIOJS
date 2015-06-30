@@ -19,27 +19,32 @@
     <script src="game.js"></script>
     <canvas id="canvas" width="600" height="600">Your browser does not support Canvas! Please download Google Chrome</canvas>
     <script>  
-      var playing = playing || false;
-      var socket = io();
-      var currentStatus = currentStatus || undefined;
-      var game = game || undefined;
-      if (!playing) {
-        socket.emit('join game', "");
-      }
+     var playing = playing || false;
+	var socket = io();
+var currentStatus = currentStatus || undefined;
+var game = game || undefined;
+if (!playing) {
+socket.emit('join game','');
+//socket.emit('yes','');
+//socket.emit('join game','');
 
-      socket.on('init setup',function(data){
-		alert("Got setup");
-        currentStatus = data;
-        game = new Game(currentStatus);
-        socket.emit('ready', "");
-      });
+	
+playing = true;
+}
 
-      socket.on('tick', function(data){
-//		alert("I received tick");
-        if (game) {
-          game.tick();
-        }
-      });
+  socket.on('init setup',function(data){
+    currentStatus = data;
+    game = new Game(currentStatus);
+	alert("Got");
+    socket.emit('ready','');
+  });
+
+  socket.on('tick', function(data){
+    if (game) {
+      game.tick();
+    }
+  });
+ 
     </script>
   </body>
 </html>
