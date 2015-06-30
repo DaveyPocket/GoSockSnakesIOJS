@@ -14,12 +14,12 @@ func main() {
         log.Fatal(err)
     }
     server.On("connection", func(so socketio.Socket) {
-		go servTick(so)
+		//go servTick(so)
         log.Println("on connection")
         so.Join("main")
-        so.On("chat message", func(msg string) {
-            log.Println("emit:", so.Emit("chat message", msg))
-            so.BroadcastTo("chat", "chat message", msg)
+        so.On("join game", func(msg string) {
+            //log.Println("emit:", so.Emit("chat message", msg))
+            so.BroadcastTo("main", "init setup", "test")
         })
         so.On("disconnection", func() {
             log.Println("on disconnect")
@@ -39,6 +39,7 @@ func main() {
 func servTick(so socketio.Socket) {
 	for {
 		so.BroadcastTo("main", "tick")
-		time.Sleep(500 * time.Millisecond
+		time.Sleep(500 * time.Millisecond)
+	}
 
 }
