@@ -5,6 +5,7 @@ import (
     "net/http"
 	"fmt"
     "github.com/googollee/go-socket.io"
+	"time"
 )
 
 func main() {
@@ -13,6 +14,10 @@ func main() {
         log.Fatal(err)
     }
     server.On("connection", func(so socketio.Socket) {
+		go func() {
+			so.BroadcastTo("chat", "chat message", "yay")
+			time.Sleep(500*time.Millisecond)
+		}()
         log.Println("on connection")
         so.Join("chat")
         so.On("chat message", func(msg string) {
@@ -33,3 +38,4 @@ func main() {
     log.Println("Serving at localhost:5000...")
     log.Fatal(http.ListenAndServe(":5000", nil))
 }
+
