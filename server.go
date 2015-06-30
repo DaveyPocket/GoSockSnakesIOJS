@@ -15,8 +15,10 @@ func main() {
     }
     server.On("connection", func(so socketio.Socket) {
 		go func() {
-			so.BroadcastTo("chat", "chat message", "yay")
-			time.Sleep(500*time.Millisecond)
+			for {
+				so.BroadcastTo("chat", "chat message", "yay")
+				time.Sleep(500*time.Millisecond)
+			}
 		}()
         log.Println("on connection")
         so.Join("chat")
