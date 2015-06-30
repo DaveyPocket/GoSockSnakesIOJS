@@ -34,13 +34,20 @@ function Screen(){
 function Game(currentStatus){
     this.snakes = currentStatus.snakes;
     this.food = currentStatus.food;
+    this.myid = currentStatus.clientId;
     this.screen = new Screen();
 
     this.drawOnScreen = function(){
+        var color;
         this.screen.clearCanvas();
-        for (var color in this.snakes) {
-            for (var i=0; i< this.snakes[color].points.length; i++){
-                this.screen.drawPoint(this.snakes[color].points[i], color);
+        for (var id in this.snakes) {
+            if (id == this.myid) {
+                color = "green";
+            } else {
+                color = "blue";
+            }
+            for (var i=0; i< this.snakes[id].points.length; i++){
+                this.screen.drawPoint(this.snakes[id].points[i], color);
             }
         }
         for (var i=0; i< this.food.length ; i++){
@@ -73,8 +80,8 @@ function Game(currentStatus){
     }
 
     this.updateSnakePositions = function() {
-        for (var color in this.snakes){
-            this.snakes[color].points = this.computeNewBody(this.snakes[color].points,this.snakes[color].direction);
+        for (var id in this.snakes){
+            this.snakes[id].points = this.computeNewBody(this.snakes[id].points,this.snakes[id].direction);
         }
     }
 
