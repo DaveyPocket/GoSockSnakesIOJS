@@ -6,27 +6,41 @@ import (
 	"fmt"
     "github.com/googollee/go-socket.io"
 	"time"
+	"./game"
 )
 
 func main() {
+	g := logic.InitGame()
+	g.AddSnake(20, 20, 5, "LEFT")
+//	g.AddSnake(2, 3, 8, "RIGHT")
     server, err := socketio.NewServer(nil)
     if err != nil {
         log.Fatal(err)
     }
     server.On("connection", func(so socketio.Socket) {
-		go func() {
-			for {
-				so.BroadcastTo("chat", "chat message", "yay")
-				time.Sleep(500*time.Millisecond)
-			}
-		}()
+	
         log.Println("on connection")
-        so.Join("chat")
-        so.On("chat message", func(msg string) {
-            log.Println("emit:", so.Emit("chat message", msg))
-            so.BroadcastTo("chat", "chat message", msg)
+        so.Join("main")
+        so.On("join game", func(msg string) {
+            log.Println("Received join game", msg)
+            so.Emit("init setup", g)
+			log.Println("Finished broadcast")
         })
-        so.On("disconnection", func() {
+		so.On("yes", func(){
+			log.Println("Hi")
+		})
+		so.On("ready", func(msg string) {
+
+			log.Println("Received ready", msg)
+
+			go func() {
+				for {
+					log.Println("tick")
+					so.BroadcastTo("main", "tick")
+					time.Sleep(500 * time.Millisecond)
+				}}()
+		})
+	so.On("disconnection", func() {
             log.Println("on disconnect")
         })
     })
@@ -41,3 +55,10 @@ func main() {
     log.Fatal(http.ListenAndServe(":5000", nil))
 }
 
+func servTick(so socketio.Socket) {
+	for {
+		so.BroadcastTo("main", "tick")
+		time.Sleep(500 * time.Millisecond)
+	}
+
+}

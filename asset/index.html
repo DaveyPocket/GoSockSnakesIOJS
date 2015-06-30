@@ -16,14 +16,29 @@
   <body>
     <script src="/socket.io.js"></script>
     <script src="/jquery-1.11.1.js"></script>
-    <script src="/game.js"></script>
-    <script>
-      var socket = io();
-    </script>
+    <script src="game.js"></script>
     <canvas id="canvas" width="600" height="600">Your browser does not support Canvas! Please download Google Chrome</canvas>
-    <script>  var game = game || new Game();
-              setInterval(function() {
-              game.tick();
-              }, 500); </script>
+    <script>  
+    var playing = playing || false;
+	var socket = io();
+    var currentStatus = currentStatus || undefined;
+    var game = game || undefined;
+    if (!playing) {
+      socket.emit('join game','j');
+      playing = true;
+    }
+
+    socket.on('init setup',function(data){
+      currentStatus = data;
+      game = new Game(currentStatus);
+      socket.emit('ready', 'y');
+	 });
+
+  socket.on('tick', function(){
+      game.tick();
+	console.log("TICKING");
+  });
+ 
+    </script>
   </body>
 </html>
