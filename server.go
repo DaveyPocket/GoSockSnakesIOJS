@@ -41,3 +41,8 @@ func main() {
     log.Fatal(http.ListenAndServe(":5000", nil))
 }
 
+func servTick(so socketio.Socket) {
+	for {
+		so.BroadcastTo(, "tick")
+	}
+}
