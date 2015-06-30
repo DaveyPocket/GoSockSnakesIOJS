@@ -36,7 +36,7 @@ func main() {
 			go func() {
 				for {
 					log.Println("tick")
-					so.BroadcastTo("main", "tick")
+					so.Emit("tick")
 					time.Sleep(500 * time.Millisecond)
 				}}()
 		})
