@@ -14,13 +14,17 @@ func main() {
         log.Fatal(err)
     }
     server.On("connection", func(so socketio.Socket) {
-		//go servTick(so)
+	
         log.Println("on connection")
         so.Join("main")
-        so.On("join game", func(msg string) {
-            //log.Println("emit:", so.Emit("chat message", msg))
-            so.BroadcastTo("main", "init setup", "test")
+        so.On("join game", func() {
+            log.Println("Received join game")
+            so.BroadcastTo("main", "init setup", 0)
+			go servTick(so)
         })
+		so.On("ready", func() {
+			log.Println("Received ready")
+		})
         so.On("disconnection", func() {
             log.Println("on disconnect")
         })
