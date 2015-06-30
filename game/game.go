@@ -28,7 +28,7 @@ type points struct {
 type ownerT	byte
 
 type s struct {
-	Body		[]points	`json:"body"`		// Slice of points
+	Body		[]points	`json:"points"`		// Slice of points
 	Dir			byte		`json:"dir"`		// Head direction
 	Owner		ownerT		`json:"owner:"`		// Connected user
 }

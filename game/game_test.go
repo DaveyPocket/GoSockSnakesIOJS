@@ -2,6 +2,7 @@ package logic
 
 import ("testing"
 		"fmt"
+		"encoding/json"
 		)
 
 func TestInitGame(t *testing.T) {
@@ -20,6 +21,11 @@ func TestGetJSON(t *testing.T) {
 	g := InitGame()
 	g.AddSnake(1, 2, 5, 0, ownerT(0))
 	g.AddSnake(2, 3, 1, 0, ownerT(0))
-	g.GetJSON()
+	q := g.GetJSON()
+	ung := InitGame()
+	err := json.Unmarshal(q, &ung)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("\n", *ung)
 }
-
