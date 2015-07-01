@@ -34,11 +34,30 @@
       socket.emit('ready', 'y');
 	 });
 
-  socket.on('tick', function(){
-      game.tick();
-	console.log("TICKING");
-  });
- 
+    socket.on('tick', function(){
+        game.tick();
+    });
+
+    socket.on('die', function(){
+        alert('You just died!');
+    });
+
+    window.addEventListener('keydown', function(event) {
+      switch (event.keyCode) {
+        case 37:
+            socket.emit('change', 'LEFT');
+            break;
+        case 38:
+            socket.emit('change', 'UP');
+            break;
+        case 39:
+            socket.emit('change', 'RIGHT');
+            break;
+        case 40:
+            socket.emit('change', 'DOWN');
+            break;
+      }
+    }, false);
     </script>
   </body>
 </html>
