@@ -96,8 +96,8 @@ func (g *game) GetJSON() ([]byte) {
 	return o
 }
 
-func (g *game) Tick(r int) {
-	r := rand.New(rand.NewSource(r))
+func (g *game) Tick(p int64) {
+	r := rand.New(rand.NewSource(p))
 	var tempTail points
 	for i, sn := range g.Snake {
 		tempTail = g.Snake[i].Body[len(sn.Body)-1]
