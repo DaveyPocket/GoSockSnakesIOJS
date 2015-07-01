@@ -32,10 +32,13 @@ function Screen(){
 
 // Game Related
 function Game(currentStatus){
-    this.snakes = currentStatus.snakes;
-    this.food = currentStatus.food;
     this.myid = this.myid || currentStatus.clientId;
     this.screen = new Screen();
+
+    this.setStatus = function(newStatus){
+        this.snakes = newStatus.snakes;
+        this.food = newStatus.food;
+    }
 
     this.drawOnScreen = function(){
         var color;
@@ -90,5 +93,6 @@ function Game(currentStatus){
         this.drawOnScreen();
     }
 
+    this.setStatus(currentStatus);
     this.drawOnScreen();
 }
