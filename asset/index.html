@@ -28,8 +28,9 @@
       playing = true;
     }
     socket.on('init setup',function(data){
-      if (game) game.setSatus(data);
-      else game = new Game(data);
+    var currentState = data;  
+	if (game != undefined){ game.setStatus(currentState);}
+      else {game = new Game(currentState);}
       socket.emit('ready', 'y');
 	 });
     socket.on('tick', function(){

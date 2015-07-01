@@ -49,10 +49,9 @@ func main() {
 		clients++
 		log.Println(&m.list)
         so.On("join game", func(msg string) {
-			lcl := clients
 			g.AddSnake(20, 20+clients, 5, "LEFT")
             log.Println("Received join game", msg)
-			sp := logic.GetPacket(*g, lcl - 1)
+			sp := logic.GetPacket(*g, clients - 1)
 			so.Emit("init setup", sp)
 			so.BroadcastTo("main", "init setup", sp)
 			if clients == 1 {
@@ -99,9 +98,12 @@ func disConnFunc(so socketio.Socket) {
 
 func (m* mserve) getId(sock socketio.Socket) (int) {
 	for _, u := range m.list {
+		fmt.Println("\n", sock, "\n", u.sock)
 		if u.sock == sock {
+			fmt.Println("true")
 			return u.clientID
 		}
 	} 
-	return -1
+	fmt.Println("False")
+	return 0
 }
