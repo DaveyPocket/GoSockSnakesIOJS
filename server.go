@@ -34,6 +34,7 @@ func main() {
 			log.Println("Received ready", msg)
 
 			go func() {
+				// This go routine needs to be ended once a connection has closed.
 				for {
 					log.Println("tick")
 					so.Emit("tick")
