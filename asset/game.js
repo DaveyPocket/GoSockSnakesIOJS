@@ -34,7 +34,7 @@ function Screen(){
 function Game(currentStatus){
     this.snakes = currentStatus.snakes;
     this.food = currentStatus.food;
-    this.myid = currentStatus.clientId;
+    this.myid = this.myid || currentStatus.clientId;
     this.screen = new Screen();
 
     this.drawOnScreen = function(){
