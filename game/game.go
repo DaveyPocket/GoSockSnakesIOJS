@@ -5,6 +5,7 @@ package logic
 import ("fmt"
 		"os"
 		"encoding/json"
+		"math/rand"
 		)
 
 const (
@@ -74,6 +75,17 @@ func (g *game) AddFood(x, y int) {
 	g.Food = append(g.Food, nF)
 }
 
+func (g *game) EatFood(tail points) {
+	for i, sn := range g.Snake {
+		for q, fd := range g.Food {
+			if sn.Body[0] == points(fd) {
+				g.Snake[i].Body = append(g.Snake[i].Body, tail)
+				g.Food = append(g.Food[0:q], g.Food[q+1:]...) // Remove food
+			}
+		}
+	}
+}
+
 func (g *game) GetJSON() ([]byte) {
 	o, err := json.Marshal(*g)
 	if err != nil {
@@ -84,8 +96,11 @@ func (g *game) GetJSON() ([]byte) {
 	return o
 }
 
-func (g *game) Tick() {
+func (g *game) Tick(r int) {
+	r := rand.New(rand.NewSource(r))
+	var tempTail points
 	for i, sn := range g.Snake {
+		tempTail = g.Snake[i].Body[len(sn.Body)-1]
 		for q, _ := range sn.Body[:len(sn.Body)-1] {
 			g.Snake[i].Body[len(sn.Body) - q - 1] = g.Snake[i].Body[len(sn.Body) - q - 2]
 		}
@@ -98,6 +113,10 @@ func (g *game) Tick() {
 					g.Snake[i].Body[0].X--
 				case "RIGHT":
 					g.Snake[i].Body[0].X++
+		}
+		g.EatFood(tempTail)
+		if len(g.Food) == 0 {
+			g.AddFood(r.Int() % 30, r.Int() % 30)
 		}
 		fmt.Println(sn)
 	}

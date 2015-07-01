@@ -50,6 +50,7 @@ func main() {
 		log.Println(&m.list)
         so.On("join game", func(msg string) {
 			g.AddSnake(20, 20+clients, 5, "LEFT")
+			g.AddFood(10, 10)
             log.Println("Received join game", msg)
 			sp := logic.GetPacket(*g, clients - 1)
 			so.Emit("init setup", sp)
@@ -62,7 +63,7 @@ func main() {
 							log.Println("tick")
 							so.Emit("tick")
 							so.BroadcastTo("main", "tick")
-							g.Tick()
+							g.Tick(5)
 						}
 						time.Sleep(200 * time.Millisecond)
 					}
