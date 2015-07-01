@@ -30,4 +30,15 @@ func TestGetJSON(t *testing.T) {
 	fmt.Println("\n", *ung)
 }
 
+func TestStatePacket(t *testing.T) {
+	g := InitGame()
+	g.AddSnake(1, 2, 5, "LEFT")
+	q := StatePacket{*g, 5}
+	fmt.Println(q)
+}
 
+func TestGetPacket(t *testing.T) {
+	g := InitGame()
+	g.AddSnake(1, 2, 5, "LEFT")
+	GetJSONPacket(*g, 5)
+}

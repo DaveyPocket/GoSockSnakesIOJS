@@ -38,9 +38,14 @@ type f points
 type game struct {
 	Snake		[]s			`json:"snakes"`		// Slice of snake
 	Food		[]f			`json:"food"`		// Slice of foods
-	ClientID	int			`json:"clientId"`
+	//ClientID	int			`json:"clientId"`
 //	State		stateType	`json:"state"`		// State byte
 	//nowTick		byte		// Current tick byte
+}
+
+type StatePacket struct {
+	game
+	ClientID	int			`json:"clientId"`
 }
 
 func InitGame() (*game) {
@@ -61,6 +66,7 @@ func (g *game) AddSnake(x, y int, startSize int, startDir string) {
 	nS := s{b, startDir}
 	g.Snake = append(g.Snake, nS)
 	fmt.Println("Added snake: ", g.Snake[len(g.Snake) - 1: len(g.Snake)])
+	fmt.Println("\n\nCurrent Snakes:", g.Snake, "\n")
 }
 
 func (g *game) AddFood(x, y int) {
@@ -78,3 +84,36 @@ func (g *game) GetJSON() ([]byte) {
 	return o
 }
 
+func (g *game) Tick() {
+	for i, sn := range g.Snake {
+		for q, _ := range sn.Body[:len(sn.Body)-1] {
+			g.Snake[i].Body[len(sn.Body) - q - 1] = g.Snake[i].Body[len(sn.Body) - q - 2]
+		}
+		switch sn.Dir {
+				case "UP":
+					g.Snake[i].Body[0].Y--
+				case "DOWN":
+					g.Snake[i].Body[0].Y++
+				case "LEFT":
+					g.Snake[i].Body[0].X--
+				case "RIGHT":
+					g.Snake[i].Body[0].X++
+		}
+		fmt.Println(sn)
+	}
+}
+
+func GetPacket(g game, clientID int) (*StatePacket) {
+	sp := StatePacket{g, clientID}
+	return &sp
+}
+
+func GetJSONPacket(g game, clientID int) ([]byte) {
+	o, err := json.Marshal(GetPacket(g, clientID))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Print("JSON packet: ")
+	os.Stdout.Write(o)
+	return o
+}
