@@ -89,4 +89,6 @@ function Game(currentStatus){
         this.updateSnakePositions();
         this.drawOnScreen();
     }
+
+    this.drawOnScreen();
 }
