@@ -43,6 +43,9 @@ function Game(currentStatus){
     this.drawOnScreen = function(){
         var color;
         this.screen.clearCanvas();
+        for (var i=0; i< this.food.length ; i++){
+            this.screen.drawPoint(this.food[i], "red");
+        }
         for (var id in this.snakes) {
             if (id == this.myid) {
                 color = "green";
@@ -52,9 +55,6 @@ function Game(currentStatus){
             for (var i=0; i< this.snakes[id].points.length; i++){
                 this.screen.drawPoint(this.snakes[id].points[i], color);
             }
-        }
-        for (var i=0; i< this.food.length ; i++){
-            this.screen.drawPoint(this.food[i], "red");
         }
     }
 
