@@ -70,20 +70,46 @@ func (g *game) AddSnake(x, y int, startSize int, startDir string) {
 	fmt.Println("\n\nCurrent Snakes:", g.Snake, "\n")
 }
 
+func (g *game) RemoveSnake(index int) {
+	g.Snake = append(g.Snake[0:index], g.Snake[index + 1:]...)
+}
+	
 func (g *game) AddFood(x, y int) {
 	nF := f{x, y}
 	g.Food = append(g.Food, nF)
 }
 
-func (g *game) EatFood(tail points) {
+func (g *game) EatFood(tail points) (food bool) {
+	food = false
 	for i, sn := range g.Snake {
 		for q, fd := range g.Food {
 			if sn.Body[0] == points(fd) {
 				g.Snake[i].Body = append(g.Snake[i].Body, tail)
 				g.Food = append(g.Food[0:q], g.Food[q+1:]...) // Remove food
+				food = true
 			}
 		}
 	}
+	return food
+}
+
+func (g *game) EatSelf() (s []int) {
+	s = make([]int, 0)
+	for i, sn := range g.Snake {
+		for _, sub := range g.Snake {
+			for _, bd := range sub.Body[1:] {
+				if sn.Body[0] == bd {
+					fmt.Println("\nRIP ", i)
+					s = append(s, i)
+				}
+				if (sn.Body[0].X < 0 || sn.Body[0].X > 30 || sn.Body[0].Y < 0 || sn.Body[0].Y > 30){
+					fmt.Println("\nRIP ", i)
+					s = append(s, i)
+				}
+			}
+		}
+	}
+	return s
 }
 
 func (g *game) GetJSON() ([]byte) {
@@ -96,8 +122,8 @@ func (g *game) GetJSON() ([]byte) {
 	return o
 }
 
-func (g *game) Tick(p int64) {
-	r := rand.New(rand.NewSource(p))
+func (g *game) Tick(p *rand.Rand) (food bool, selfeat []int){
+//	r := rand.New(rand.NewSource(p))
 	var tempTail points
 	for i, sn := range g.Snake {
 		tempTail = g.Snake[i].Body[len(sn.Body)-1]
@@ -114,12 +140,14 @@ func (g *game) Tick(p int64) {
 				case "RIGHT":
 					g.Snake[i].Body[0].X++
 		}
-		g.EatFood(tempTail)
+		food = g.EatFood(tempTail)
+		selfeat = g.EatSelf()
 		if len(g.Food) == 0 {
-			g.AddFood(r.Int() % 30, r.Int() % 30)
+			g.AddFood(p.Int() % 30, p.Int() % 30)
 		}
 		fmt.Println(sn)
 	}
+	return food, selfeat
 }
 
 func GetPacket(g game, clientID int) (*StatePacket) {

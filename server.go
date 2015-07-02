@@ -6,6 +6,7 @@ import (
 	"fmt"
     "github.com/googollee/go-socket.io"
 	"time"
+	"math/rand"
 	"./game"
 )
 type mserve struct {
@@ -22,6 +23,7 @@ func main() {
 	m := new(mserve)
 	m.list = make([]users, 10)
 	g := logic.InitGame()
+	r := rand.New(rand.NewSource(5))
     server, err := socketio.NewServer(nil)
     if err != nil {
         log.Fatal(err)
@@ -37,13 +39,13 @@ func main() {
 				so.Emit("tick")
 				time.Sleep(500 * time.Millisecond)
 			}
-		}(v)*/
+		}()*/
 	}
 
 
 	connFunc := func(so socketio.Socket) {	
         log.Println("Client connected")
-		pause = true
+		//pause = true
         so.Join("main")
 		m.list[clients] = users{so, clients}
 		clients++
@@ -63,7 +65,19 @@ func main() {
 							log.Println("tick")
 							so.Emit("tick")
 							so.BroadcastTo("main", "tick")
-							g.Tick(5)
+							q, s := g.Tick(r)
+							if q == true {
+								so.Emit("init setup", sp)
+								so.BroadcastTo("main", "init setup", sp)
+							}
+							if len(s) != 0 {
+								for _, sr := range s {
+									g.RemoveSnake(sr)
+									fmt.Println("Remove snake ", sr)
+									so.Emit("die")
+									so.BroadcastTo("main", "init setup", sp)
+								}
+							}
 						}
 						time.Sleep(200 * time.Millisecond)
 					}
